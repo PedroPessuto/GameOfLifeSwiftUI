@@ -11,10 +11,11 @@ import Foundation
     
     var board: [Int] = []
     var newBoard: [Int] = []
-    var size: Int = 100
+    var size: Int = 10
+    var steps: Int = 0
     
     func check(n: Int) {
-        
+        self.steps = self.steps + 1
         let middle: Int = self.board[n]
         
         // Em Cima
@@ -74,13 +75,15 @@ import Foundation
         //        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
         //
         //        }
+        self.steps = 0
         self.newBoard = []
         
         for i in 0..<size*size {
             self.check(n: i)
         }
-        
+        print(self.steps)
         self.board = self.newBoard
+        
     }
     
     
