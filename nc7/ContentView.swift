@@ -43,15 +43,13 @@ struct ContentView: View {
                         }
                     }
                 }
-                
-                Button(action: {gameController.play()}) {
-                    Text("play")
-                }
-                .padding(.top)
-                
+            
             }
             
-            
+            Button(action: {gameController.play()}) {
+                Text("play")
+            }
+            .padding(.top)
         }
         .environment(gameController)
     }

@@ -11,8 +11,11 @@ import Foundation
     
     var board: [[Int]] = []
     var newBoard: [[Int]] = []
+    var steps: Int = 0
     
     func check(x: Int, y: Int) {
+        steps = steps + 1
+        
         let middle: Int = self.board[x][y]
         let row: Int = board.count
         let col: Int = board[0].count
@@ -55,7 +58,7 @@ import Foundation
         for _ in 0..<size {
             var aux: [Int] = []
             for _ in 0..<size {
-                aux.append(Int.random(in: 0...0))
+                aux.append(Int.random(in: 0...1))
             }
             self.board.append(aux)
             self.newBoard.append(aux)
@@ -69,20 +72,22 @@ import Foundation
 //        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
 //            
 //        }
+        
+        steps = 0
         for coluna in 0..<self.board.count {
             for linha in 0..<self.board[coluna].count {
                 self.check(x: linha, y: coluna)
             }
         }
         self.board = self.newBoard
-        
+        print(steps)
         
     }
     
     
     
     init() {
-        generateBoard(size: 5)
+        generateBoard(size: 100)
     }
     
     
