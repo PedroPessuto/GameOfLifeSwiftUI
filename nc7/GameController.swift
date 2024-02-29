@@ -9,42 +9,48 @@ import Foundation
 
 @Observable class GameController {
     
-    var board: [[Int]] = []
-    var newBoard: [[Int]] = []
+    var board: [Int] = []
+    var newBoard: [Int] = []
+    var size: Int = 100
     
-    func check(x: Int, y: Int) {
-        let middle: Int = self.board[x][y]
-        let row: Int = board.count
-        let col: Int = board[0].count
+    func check(n: Int) {
+        
+        let middle: Int = self.board[n]
         
         // Em Cima
-        let p00 = self.board[(x - 1 + row) % row][(y - 1 + col) % col]
-        let p01 = self.board[(x - 1 + row) % row][(y + col) % col]
-        let p02 = self.board[(x - 1 + row) % row][(y + 1 + col) % col]
+        let p00 = (n - self.size) % self.size == 0 || (n - self.size - 1) < 0 ? 0 : self.board[n - self.size - 1]
+        let p01 = (n - self.size) < 0 ? 0 : self.board[n - self.size]
+        let p02 = (n - self.size + 1) % self.size == 0 || (n - self.size + 1) < 0 ? 0 : self.board[n - self.size + 1]
         
         // Mesma Linha
-        let p10 = self.board[(x + row) % row][(y - 1 + col) % col]
-        let p12 = self.board[(x + row) % row][(y + 1 + col) % col]
+        let p10 = n % self.size == 0 ? 0 : self.board[n - 1]
+        let p12 = (n - self.size + 1) % self.size == 0 ? 0 : self.board[n + 1]
         
         // Linha De Baixo
-        let p20 = self.board[(x + 1 + row) % row][(y - 1 + col) % col]
-        let p21 = self.board[(x + 1 + row) % row][(y + col) % col]
-        let p22 = self.board[(x + 1 + row) % row][(y + 1 + col) % col]
-        
+        let p20 = (n + self.size) % self.size == 0 || (n + self.size) >= self.size * self.size ? 0 : self.board[n + self.size - 1]
+        let p21 = (n + self.size) >= self.size * self.size ? 0 : self.board[n + self.size]
+        let p22 = (n + self.size + 1) % self.size == 0 || (n + self.size) >= self.size * self.size ? 0 : self.board[n + self.size + 1]
+
+ 
 //        print("\(p00) | \(p01) | \(p02) ")
-//        print("\(p10) | \(self.board[x][y]) | \(p12) ")
-//        print("\(p20) | \(p21) | \(p22) ")
+//        print("\(p10) | \(middle) | \(p12) ")
+//        print("\(p20) | \(p21) | \(p22) \n")
         
         let sum: Int =  p00 + p01 + p02 + p10 + p12 + p20 + p21 + p22
-        
+
         if middle == 0 {
             if sum == 3 {
-                newBoard[x][y] = 1
+                self.newBoard.append(1)
+            } else {
+                self.newBoard.append(0)
             }
         }
         else {
             if sum < 2 || sum > 3 {
-                newBoard[x][y] = 0
+                self.newBoard.append(0)
+            }
+            else {
+                self.newBoard.append(1)
             }
         }
         
@@ -52,13 +58,12 @@ import Foundation
     
     func generateBoard(size: Int) {
         
-        for _ in 0..<size {
-            var aux: [Int] = []
-            for _ in 0..<size {
-                aux.append(Int.random(in: 0...0))
-            }
-            self.board.append(aux)
-            self.newBoard.append(aux)
+        //        self.board = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+        //        self.newBoard = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+        
+        for _ in 0..<size*size {
+            self.board.append(Int.random(in: 0...1))
+            self.newBoard.append(Int.random(in: 0...1))
         }
         
         
@@ -66,23 +71,22 @@ import Foundation
     
     func play() {
         
-//        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-//            
-//        }
-        for coluna in 0..<self.board.count {
-            for linha in 0..<self.board[coluna].count {
-                self.check(x: linha, y: coluna)
-            }
+        //        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+        //
+        //        }
+        self.newBoard = []
+        
+        for i in 0..<size*size {
+            self.check(n: i)
         }
+        
         self.board = self.newBoard
-        
-        
     }
     
     
     
     init() {
-        generateBoard(size: 5)
+        generateBoard(size: self.size)
     }
     
     
